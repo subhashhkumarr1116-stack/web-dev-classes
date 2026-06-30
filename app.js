@@ -1,31 +1,43 @@
-const express = require("express")
-const app = express()
+const express=require("express");
+const app=express();
+let port=4000;
 
+app.set("template engine","ejs")
+const mongoose=require("mongoose")
+mongoose.connect("mongodb://127.0.0.1:27017/College")
+.then(() =>{
+    console.log("DB Connecttion is alive...")})
+.catch(err =>{
+    console.log(err)});
+// console.log(mongoose);
+// let port=4000;
+
+const MiraiSchema=new mongoose.Schema({
+    name:"String",
+    age:Number,
+    course:"String"
+})
+const students1=mongoose.model("students1",MiraiSchema)
+
+app.get("/",async(req,res)=>{
+    let allstudent=await students1.find();
+    console.log(allstudent);
+    
+    let obj={
+        "name":"partha sarthi",
+        "age":33,
+        "course":"B pharma"
+    }
+    allstudent = allstudent.filter(s => s.age > 10);
+    res.render("students.ejs",{allstudent});
+    
+})
 app.get("/",(req,res)=>{
-
-
-    console.log(req.param);
     
-    res.json({
-        "name":"vikas patel",
-        "college":"mirai school of technology"
-    })
-})
-
-app.get("/result/:year/:roll",(req,res)=>{
-    console.log(req.params);
-    console.log(req.params.roll);
-    
-    // res.send("fail h bhai....")
-    res.send(`fail ho gya ${req.params.roll}`)    
-})
-
-app.get("/search",(req,res)=>{
-    console.log(req.query);
-    res.send("data found in db")
+    res.send("home page is on service .......");
     
 })
-app.listen(3000,()=>{
-    console.log("server is running at 3000");
-    
+app.listen(port,()=>{
+        console.log(`server is working on ${port}`);
+
 })
