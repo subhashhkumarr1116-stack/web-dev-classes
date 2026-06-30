@@ -1,64 +1,31 @@
-const express = require("express");
-const app = express();
-
-app.use((req,res,next)=>{
-    let out = `url=${req.url} and address is ${req.ip}`;
-    console.log(out);
-    next();
-    
-})
-
-
-app.use((req,res,next)=>{
-    console.log("middleware 1 for mobile auth");
-    // authentication 
-    let auth = true;
-    if(!auth){
-        res.send("auth failed... try again")
-    }
-    else{
-        next();
-    }
-    // next();
-})
-
-app.use((req,res,next)=>{
-    console.log("middleware 2 for email auth");
-    // authentication 
-    let auth = true;
-    if(!auth){
-        res.send("email auth failed... try again")
-    }
-    else{
-        next();
-    }
-    // next(); -->> to call the next middleware
-})
+const express = require("express")
+const app = express()
 
 app.get("/",(req,res)=>{
-    res.send("home page...")
+
+
+    console.log(req.param);
+    
+    res.json({
+        "name":"vikas patel",
+        "college":"mirai school of technology"
+    })
 })
 
-app.post("/details",(req,res)=>{
-    console.log("details wala route");
-    console.log(req.body); // --->>> contains the data sent by the client in the body of an HTTP request
+app.get("/result/:year/:roll",(req,res)=>{
+    console.log(req.params);
+    console.log(req.params.roll);
+    
+    // res.send("fail h bhai....")
+    res.send(`fail ho gya ${req.params.roll}`)    
+})
 
-    res.send("data saved ......")
+app.get("/search",(req,res)=>{
+    console.log(req.query);
+    res.send("data found in db")
     
 })
-
-
-
-app.get("/about",(req,res)=>{
-    res.send("ABOUT PAGE...")
-})
-
-app.use((req,res,next)=>{
-    res.send("404 NOT FOUND")
-})
-
-
 app.listen(3000,()=>{
-    console.log(`Server is running at 3000`);
+    console.log("server is running at 3000");
     
 })
